@@ -12,11 +12,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/todos")
 public class TodoController {
-    private ITodoService todoService;
-    private ITodoService todoService2;
+    private final ITodoService todoService;
+    private final ITodoService todoService2;
 
     private static List<Todo> todoList;
-    private final static Map<String, String> notFoundResponse = Map.of("message", "Todo not found");
+    private final static Map<String, String> NOT_FOUND = Map.of("message", "Todo not found");
 
     public TodoController(
             @Qualifier("todoService") ITodoService todoService,
@@ -43,11 +43,11 @@ public class TodoController {
                 return ResponseEntity.status(HttpStatus.OK).body(todo + " " + todoService.doSomething());
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFoundResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NOT_FOUND);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> getTodoByUserId(@RequestParam(required = false, defaultValue = "1") int userId) {
+    public ResponseEntity<?> getTodoByUserId(@RequestParam(required = false, defaultValue = "0") int userId) {
         if (userId == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "User ID is required"));
         }
@@ -56,7 +56,7 @@ public class TodoController {
                 return ResponseEntity.ok(todo);
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFoundResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NOT_FOUND);
     }
 
     @PostMapping("/")
@@ -73,7 +73,7 @@ public class TodoController {
                 return ResponseEntity.ok(todo);
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFoundResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NOT_FOUND);
     }
 
     @PatchMapping("/{id}")
@@ -86,6 +86,6 @@ public class TodoController {
                 return ResponseEntity.ok(todo);
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFoundResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NOT_FOUND);
     }
 }
