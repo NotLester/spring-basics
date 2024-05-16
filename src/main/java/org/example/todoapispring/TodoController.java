@@ -17,6 +17,7 @@ public class TodoController {
 
     private static List<Todo> todoList;
     private final static Map<String, String> NOT_FOUND = Map.of("message", "Todo not found");
+    private final static Map<String, String> USER_ID_NOT_FOUND = Map.of("message", "User ID is required");
 
     public TodoController(
             @Qualifier("todoService") ITodoService todoService,
@@ -40,7 +41,7 @@ public class TodoController {
     public ResponseEntity<?> getTodoById(@PathVariable int id) {
         for (Todo todo : todoList) {
             if (todo.getId() == id) {
-                return ResponseEntity.status(HttpStatus.OK).body(todo + " " + todoService.doSomething());
+                return ResponseEntity.ok(todo + " " + todoService.doSomething());
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NOT_FOUND);
@@ -49,7 +50,7 @@ public class TodoController {
     @GetMapping("/user")
     public ResponseEntity<?> getTodoByUserId(@RequestParam(required = false, defaultValue = "0") int userId) {
         if (userId == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "User ID is required"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(USER_ID_NOT_FOUND);
         }
         for (Todo todo : todoList) {
             if (todo.getUserId() == userId) {
